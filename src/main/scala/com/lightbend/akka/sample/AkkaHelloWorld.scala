@@ -1,6 +1,7 @@
 package com.lightbend.akka.sample
 
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
+import scala.io.StdIn
 
 //companion object defines msgs handled by Greeter actor
 object Greeter {
@@ -17,7 +18,7 @@ class Greeter(message: String, printerActor: ActorRef) extends Actor {
 
   var greeting = ""
 
-  def receive = {
+  def receive: Receive = {
     case WhoToGreet(who) =>
       greeting = s"$message, $who"
     case Greet =>
@@ -43,6 +44,7 @@ class Printer extends Actor with ActorLogging {
 
 //main
 object AkkaHelloWorld extends App {
+  import Greeter._
   val system: ActorSystem = ActorSystem("vishalSystem")
   try {
     //create printer actor
@@ -53,6 +55,19 @@ object AkkaHelloWorld extends App {
       system.actorOf(Greeter.props("Howdy", printer), "howdyGreeter")
     val holaGreeter: ActorRef =
       system.actorOf(Greeter.props("Hola", printer), "holaGreeter")
+
+    //send msgs into Greeter's mailbox
+    helloGreeter ! WhoToGreet("Vishal")
+    helloGreeter ! Greet
+    helloGreeter ! WhoToGreet("Mona")
+    helloGreeter ! Greet
+    howdyGreeter ! WhoToGreet("World")
+    howdyGreeter ! Greet
+    holaGreeter ! WhoToGreet("America")
+    holaGreeter ! Greet
+
+    println("Enter to exit")
+    StdIn.readLine()
   } finally {
     system.terminate()
   }
