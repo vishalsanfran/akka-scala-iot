@@ -45,7 +45,14 @@ class Printer extends Actor with ActorLogging {
 object AkkaHelloWorld extends App {
   val system: ActorSystem = ActorSystem("vishalSystem")
   try {
-
+    //create printer actor
+    val printer: ActorRef = system.actorOf(Printer.props, "printerActor")
+    val helloGreeter: ActorRef =
+      system.actorOf(Greeter.props("Hello", printer), "helloGreeter")
+    val howdyGreeter: ActorRef =
+      system.actorOf(Greeter.props("Howdy", printer), "howdyGreeter")
+    val holaGreeter: ActorRef =
+      system.actorOf(Greeter.props("Hola", printer), "holaGreeter")
   } finally {
     system.terminate()
   }
