@@ -1,6 +1,6 @@
 package com.lightbend.akka.sample
 
-import akka.actor.{Actor, ActorLogging, ActorRef, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
 
 //companion object defines msgs handled by Greeter actor
 object Greeter {
@@ -38,5 +38,15 @@ class Printer extends Actor with ActorLogging {
   def receive: Receive = {
     case Greeting(greeting) =>
       log.info(s"Greeting received (from ${sender()}): $greeting")
+  }
+}
+
+//main
+object AkkaHelloWorld extends App {
+  val system: ActorSystem = ActorSystem("vishalSystem")
+  try {
+
+  } finally {
+    system.terminate()
   }
 }
