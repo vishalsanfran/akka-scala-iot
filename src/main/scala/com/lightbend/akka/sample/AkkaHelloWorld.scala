@@ -1,6 +1,6 @@
 package com.lightbend.akka.sample
 
-import akka.actor.{ActorRef, Props}
+import akka.actor.{ActorRef, Props, Actor}
 
 //companion object defines msgs handled by Greeter actor
 object Greeter {
@@ -10,6 +10,16 @@ object Greeter {
 }
 
 
-class AkkaHelloWorld {
+//greeter actor
+class Greeter(message: String, printerActor: ActorRef) extends Actor {
+  import Greeter._
 
+  var greeting = ""
+
+  def receive = {
+    case WhoToGreet(who) =>
+      greeting = s"$message, $who"
+    case Greet =>
+      printerActor ! Greeting(greeting)
+  }
 }
